@@ -1,0 +1,6 @@
+@CHARSET "ISO-8859-1";
+
+table{ width:100%; border-spacing: 0; }
+th {font-weight:bold; text-align: left;}
+tr:nth-child(even) {background: #CCC}
+tr:nth-child(odd) {background: #FFF}
