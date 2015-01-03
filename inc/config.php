@@ -1,4 +1,28 @@
 <?php
+/**
+ * Config.php
+ *
+ * @author Dan Fisch <dan.fisch@gmail.com>
+ * @copyright 2015 Dan Fisch
+ * 
+ * This file contains a configuration class which will read and parse a .config textfile
+ * and make each item available in code
+ * 
+ * Usage:
+ * Initialization
+ * 
+ * $foo = new Configuration( [$filename] )
+ *      File name is optional, and defaults to settings.config
+ *      
+ *  Get individual property
+ *  $foo->property_name
+ *       Return value of property, null if it doesn't exist
+ *       
+ *  Get all properties
+ *  $foo->get_all_properties
+ */
+
+
 class Configuration
 {
 	private $_data = array();//
@@ -18,6 +42,16 @@ class Configuration
 		}
 	}
 	
+	/**
+	 * Function __get
+	 * @param string $key
+	 * @return multitype:|NULL
+	 * 
+	 * This is a PHP magic method with acts as a getter. $config->property
+	 * is the same as $config->__get('property').array
+	 * 
+	 * Returns the property value, or null if it doesn't exists
+	 */
 	public function __get( $key )
 	{
 		//echo 'trying to get value '.$key;
@@ -27,16 +61,30 @@ class Configuration
 		}
 		else
 		{
-			trigger_error('Setting "'.$key.'" does not exist.', E_USER_WARNING);
+			trigger_error('Property "'.$key.'" does not exist.', E_USER_WARNING);
 			return null;
 		}
 	}
 	
-	public function get_all_settings()
+	/**
+	 * function get_all_properties
+	 * @return array:multitype
+	 * Returns an associative array containing all properties and values from the
+	 * config file.
+	 */
+	public function get_all_properties()
 	{
 		return $this->_data;
 	}
 	
+	/**
+	 * function _process_line
+	 * @param string $line
+	 * @param int $line_number
+	 * 
+	 * This takes a single line from the config, runs it through a few regular expressions
+	 * to get the name and the value. We then add it to the data property
+	 */
 	private function _process_line( $line, $line_number )
 	{
 		//trim leading and trailing whitespace
@@ -95,6 +143,12 @@ class Configuration
 				elseif( preg_match('/^no|off|false$/i', $value) == 1 )
 				{
 					$value = FALSE;
+				}
+				if( array_key_exists( $key, $this->_data )){
+					trigger_error( 
+						'Property "'.$key.'" exists multiple times in config file',
+						E_USER_NOTICE
+					);
 				}
 				$this->_data[$key] = $value;
 			} 

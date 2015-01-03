@@ -25,11 +25,11 @@ $config = new Configuration();
 		<tbody>
 			<?php
 
-			$settings = $config->get_all_settings();
-			var_dump( $settings );
-			foreach( $settings as $key => $value ){
+			$properties = $config->get_all_properties();
+			var_dump( $properties );
+			foreach( $properties as $property => $value ){
 				echo '<tr>';
-				echo '<td>' . $key . '</td>';
+				echo '<td>' . $property . '</td>';
 				echo '<td>' . (( $value === TRUE ) ? "TRUE" : (( $value === FALSE) ? "FALSE" : $value)) . '</td>';
 				echo '<td>' . gettype( $value ) . '</td>';
 				echo '</tr>';	
